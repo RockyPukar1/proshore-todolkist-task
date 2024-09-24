@@ -1,0 +1,25 @@
+<ul id="todo-list">
+  <% if (todos.length===0) { %>
+    <li>No todos available. Please add some</li>
+  <% } else { %>
+    <% todos.forEach((todo)=> { %>
+      <li>
+        <strong>
+          <%= todo.name %>
+        </strong> - <%= todo.description %>
+          <span>(<%= new Date(todo.dateTime).toLocaleString() %>)</span>
+          <form action="/todos/<%= todo._id %>/mark?_method=PUT" method="post" style="display:inline;">
+            <label>
+              <input type="checkbox" name="isDone" onchange="this.form.submit()" <%=todo.isDone ? 'checked' : '' %>
+              />
+              <%= todo.isDone ? 'Unmark as Done' : 'Mark as Done' %>
+            </label>
+          </form>
+          <a href="/todos/<%= todo._id %>/edit">Edit</a>
+          <form action="/todos/<%= todo._id %>?_method=DELETE" method="post" style="display:inline;">
+            <button type="submit" class="delete-button">Delete</button>
+          </form>
+      </li>
+    <% }) %>
+  <% } %>
+</ul>

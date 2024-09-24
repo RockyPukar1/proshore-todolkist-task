@@ -1,0 +1,63 @@
+<%- include('partials/header', { title: "Todos List" }) %>
+  <h1>Todo List</h1>
+
+  <label class="filter">Filter</label>
+  <select name="filter" id="filter" onchange="filterTodos()">
+    <option value="all" <%=filter==='all' || !filter ? 'selected' : '' %>>All</option>
+    <option value="done" <%=filter==='done' ? 'selected' : '' %>>Done</option>
+    <option value="upcoming" <%=filter==='upcoming' ? 'selected' : '' %>>Upcoming</option>
+  </select>
+
+  <div id="todo-list-container">
+    <ul id="todo-list">
+      <% if (todos.length===0) { %>
+        <li>No todos available. Please add some</li>
+      <% } else { %>
+        <% todos.forEach((todo)=> { %>
+          <li>
+            <strong>
+              <%= todo.name %>
+            </strong> - <%= todo.description %>
+              <span>(<%= new Date(todo.dateTime).toLocaleString() %>)</span>
+              <form action="/todos/<%= todo._id %>/mark?_method=PUT" method="post" style="display:inline;">
+                <label>
+                  <input type="checkbox" name="isDone" onchange="this.form.submit()" <%=todo.isDone ? 'checked' : '' %>
+                  />
+                  <%= todo.isDone ? 'Unmark as Done' : 'Mark as Done' %>
+                </label>
+              </form>
+              <a href="/todos/<%= todo._id %>/edit">Edit</a>
+              <form action="/todos/<%= todo._id %>?_method=DELETE" method="post" style="display:inline;">
+                <button type="submit" class="delete-button">Delete</button>
+              </form>
+          </li>
+        <% }) %>
+      <% } %>
+    </ul>
+  </div>
+
+  <a href="/todos/new">Add New Todo</a>
+
+  <script>
+    async function filterTodos() {
+      const filter = document.getElementById("filter").value;
+
+      try {
+        jQuery.ajax({
+          url: `/todos?filter=${filter}`,
+          method: "GET",
+          success: function(response) {
+            console.log(response)
+            $('#todo-list-container').html(response);
+          }
+        });
+
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    }
+
+  </script>
+  </body>
+
+  </html>

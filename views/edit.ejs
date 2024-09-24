@@ -1,0 +1,21 @@
+<%- include('partials/header', { title: "Edit Todo" }) %>
+  <h1>Edit Todo</h1>
+
+  <form action="/todos/<%= todo._id %>?_method=PUT" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" value="<%= todo.name %>" required>
+
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required><%= todo.description %></textarea>
+
+    <label for="dateTime">Date & Time:</label>
+    <input type="datetime-local" name="dateTime" id="dateTime"
+      value="<%= new Date(todo.dateTime).toISOString().slice(0, 16) %>" required>
+
+    <button type="submit">Update Todo</button>
+  </form>
+
+  <a href="/todos">Back to List</a>
+  </body>
+
+  </html>
